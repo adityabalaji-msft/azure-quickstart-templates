@@ -31,15 +31,475 @@
     },
     "resources": [
         {
-            "apiVersion": "2015-11-01-preview",
-            "name": "[parameters('workspaceName')]",
-            "type": "Microsoft.OperationalInsights/workspaces",
-            "location": "[parameters('workspaceLocation')]",
-            "resources": [
+            
+                    "apiVersion": "2015-11-01-preview",
+                    "name": "Jobs",
+                    "type": "views",
+                    "location": "[parameters('location')]",
+                    "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Jobs')]",
+                    "dependson": [
+                        "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                    ],
+                    "properties": {
+                        "Id": "Jobs",
+                        "Name": "Jobs",
+                        "Author": null,
+                        "Source": "Local",
+                        "Version": 2,
+                        "Dashboard": [
+                            {
+                                "Id": "LineChartBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Total Jobs by Job Status",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Job Status",
+                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
+                                    },
+                                    "LineChart": {
+                                        "Query": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by bin(TimeGenerated, 1h) , JobStatus_s | sort by count_JobUniqueId_g desc",
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "Count",
+                                                "baseUnit": "Ones",
+                                                "displayUnit": "Ones"
+                                            },
+                                            "customLabel": "No of jobs"
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by JobStatus_s | sort by count_JobUniqueId_g desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Count",
+                                        "ColumnsTitle": {
+                                            "Name": "Job Status",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by JobStatus_s | sort by count_JobUniqueId_g desc | search {selected item} ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by JobStatus_s | sort by count_JobUniqueId_g desc | search {selected item} "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Failed jobs by Failure Code",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Failed jobs by Failure Code",
+                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
+                                    },
+                                    "Donut": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"| extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc ",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Failure Code",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc |search {selected item} ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc |search {selected item} "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "NumberTileListBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Jobs by Job Creation Time",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Tile": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\") on BackupItemUniqueId_s| summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | count",
+                                        "Legend": "Total no of jobs",
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join (AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | extend timeOfDay=datetime_part(\"Hour\",TimeGenerated) | summarize count(JobUniqueId_g) by bin(timeOfDay,3) | extend timeBucketStart24 = iff(timeOfDay-1.5>0,timeOfDay-1.5,timeOfDay-1.5+24), timeBucketEnd24=iff(timeOfDay+1.5<24,timeOfDay+1.5,timeOfDay+1.5-24) | extend timeBucketStart12=iff(timeBucketStart24>12,timeBucketStart24-12, timeBucketStart24) , timeBucketStartMeridian = iff(timeBucketStart24<12,\"AM\", iff(timeBucketStart24<24,\"PM\",\"AM\")), timeBucketEnd12=iff(timeBucketEnd24>12,timeBucketEnd24-12, timeBucketEnd24) , timeBucketEndMeridian = iff(timeBucketEnd24<12,\"AM\", iff(timeBucketEnd24<24,\"PM\",\"AM\")) | project timeBucketStart24, timeBucketStart12 , timeBucketEnd12 , timeBucketStartMeridian , timeBucketEndMeridian , count_JobUniqueId_g | extend timeBucketStartHr=toint(timeBucketStart12), timeBucketStartMin=toint((timeBucketStart12-floor(timeBucketStart12,1))*60), timeBucketEndHr=toint(timeBucketEnd12), timeBucketEndMin=toint((timeBucketEnd12-floor(timeBucketEnd12,1))*60)| extend timeBucketStartMinString=iff(timeBucketStartMin>9,tostring(timeBucketStartMin),iff(timeBucketStartMin>0,strcat(\"0\",timeBucketStartMin), \"00\")), timeBucketEndMinString=iff(timeBucketEndMin>9,tostring(timeBucketEndMin),iff(timeBucketEndMin>0,strcat(\"0\",timeBucketEndMin), \"00\")) | extend timeBucketString = strcat(tostring(timeBucketStartHr),\":\",timeBucketStartMinString,timeBucketStartMeridian, \"-\",tostring(timeBucketEndHr), \":\", timeBucketEndMinString,timeBucketEndMeridian) |project timeBucketString , count_JobUniqueId_g |sort by count_JobUniqueId_g desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Time of Day",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join (AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | extend timeOfDay=datetime_part(\"Hour\",TimeGenerated) | summarize count(JobUniqueId_g) by bin(timeOfDay,3) | extend timeBucketStart24 = iff(timeOfDay-1.5>0,timeOfDay-1.5,timeOfDay-1.5+24), timeBucketEnd24=iff(timeOfDay+1.5<24,timeOfDay+1.5,timeOfDay+1.5-24) | extend timeBucketStart12=iff(timeBucketStart24>12,timeBucketStart24-12, timeBucketStart24) , timeBucketStartMeridian = iff(timeBucketStart24<12,\"AM\", iff(timeBucketStart24<24,\"PM\",\"AM\")), timeBucketEnd12=iff(timeBucketEnd24>12,timeBucketEnd24-12, timeBucketEnd24) , timeBucketEndMeridian = iff(timeBucketEnd24<12,\"AM\", iff(timeBucketEnd24<24,\"PM\",\"AM\")) | project timeBucketStart24, timeBucketStart12 , timeBucketEnd12 , timeBucketStartMeridian , timeBucketEndMeridian , count_JobUniqueId_g | extend timeBucketStartHr=toint(timeBucketStart12), timeBucketStartMin=toint((timeBucketStart12-floor(timeBucketStart12,1))*60), timeBucketEndHr=toint(timeBucketEnd12), timeBucketEndMin=toint((timeBucketEnd12-floor(timeBucketEnd12,1))*60)| extend timeBucketStartMinString=iff(timeBucketStartMin>9,tostring(timeBucketStartMin),iff(timeBucketStartMin>0,strcat(\"0\",timeBucketStartMin), \"00\")), timeBucketEndMinString=iff(timeBucketEndMin>9,tostring(timeBucketEndMin),iff(timeBucketEndMin>0,strcat(\"0\",timeBucketEndMin), \"00\")) | extend timeBucketString = strcat(tostring(timeBucketStartHr),\":\",timeBucketStartMinString,timeBucketStartMeridian, \"-\",tostring(timeBucketEndHr), \":\", timeBucketEndMinString,timeBucketEndMeridian) |project timeBucketString , count_JobUniqueId_g |sort by count_JobUniqueId_g desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Top 5 Backup Items by Job Duration",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Total Job Duration (Hrs)",
+                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
+                                    },
+                                    "Donut": {
+                                        "Query": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Backup Item",
+                                            "Value": "Total Job Duration (hrs)"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "NumberTileListBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Jobs by Job Duration",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Tile": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | count",
+                                        "Legend": "Total no of jobs",
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Job\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize dcount(JobUniqueId_g) by bin(todouble(JobDurationInSecs_s), 600) | extend JobDurationInMin = todouble(JobDurationInSecs_s) / 60 | extend JobDurationLowerLimit=iff(JobDurationInMin>5,JobDurationInMin - 5,todouble(0)), JobDurationUpperLimit = JobDurationInMin + 5 | extend JobDurationString=strcat(tostring(JobDurationLowerLimit),\" to \",tostring(JobDurationUpperLimit), \" min\") | project JobDurationString , dcount_JobUniqueId_g | sort by dcount_JobUniqueId_g desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Job Duration",
+                                            "Value": "No of Jobs"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Job\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize dcount(JobUniqueId_g) by bin(todouble(JobDurationInSecs_s), 600) | extend JobDurationInMin = todouble(JobDurationInSecs_s) / 60 | extend JobDurationLowerLimit=iff(JobDurationInMin>5,JobDurationInMin - 5,todouble(0)), JobDurationUpperLimit = JobDurationInMin + 5 | extend JobDurationString=strcat(tostring(JobDurationLowerLimit),\" to \",tostring(JobDurationUpperLimit), \" min\") | project JobDurationString , dcount_JobUniqueId_g | sort by dcount_JobUniqueId_g desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Job\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize dcount(JobUniqueId_g) by bin(todouble(JobDurationInSecs_s), 600) | extend JobDurationInMin = todouble(JobDurationInSecs_s) / 60 | extend JobDurationLowerLimit=iff(JobDurationInMin>5,JobDurationInMin - 5,todouble(0)), JobDurationUpperLimit = JobDurationInMin + 5 | extend JobDurationString=strcat(tostring(JobDurationLowerLimit),\" to \",tostring(JobDurationUpperLimit), \" min\") | project JobDurationString , dcount_JobUniqueId_g | sort by dcount_JobUniqueId_g desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Jobs by Total Data Transferred",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Jobs by Total Data Transferred (MB)",
+                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
+                                    },
+                                    "LineChart": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join (AzureDiagnostics | where Category == \"AzureBackupReport\"| extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize sum(todouble(DataTransferredInMB_s)) by bin(TimeGenerated, 1d), JobOperation_s ",
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": "Data Transferred (MB)"
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize totalDataTransferred=sum(todouble(DataTransferredInMB_s)) by JobOperation_s | sort by totalDataTransferred desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Type",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize totalDataTransferred=sum(todouble(DataTransferredInMB_s)) by JobOperation_s | sort by totalDataTransferred desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize totalDataTransferred=sum(todouble(DataTransferredInMB_s)) by JobOperation_s | sort by totalDataTransferred desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "Filters": [
+                            {
+                                "FieldName": "JobOperationSubType_s",
+                                "QueryForValues": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobOperationSubType_s!=\"\" | distinct JobOperationSubType_s ",
+                                "Title": "JobOperationSubType"
+                            },
+                            {
+                                "FieldName": "JobOperation_s",
+                                "QueryForValues": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobOperation_s!=\"\" | distinct JobOperation_s",
+                                "Title": "JobOperation"
+                            },
+                            {
+                                "FieldName": "BackupItemType_s",
+                                "QueryForValues": "AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | distinct BackupItemType_s",
+                                "Title": "DatasourceType"
+                            }
+                        ],
+                        "OverviewTile": {
+                            "Id": "SingleQueryDonutBuilderTileV1",
+                            "Type": "OverviewTile",
+                            "Version": 2,
+                            "Configuration": {
+                                "Donut": {
+                                    "Query": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" and JobOperation_s == \"Backup\" | summarize dcount(JobUniqueId_g) by JobStatus_s",
+                                    "CenterLegend": {
+                                        "Text": "Total",
+                                        "Operation": "Sum",
+                                        "ArcsToSelect": []
+                                    },
+                                    "Options": {
+                                        "colors": [
+                                            "#55d455",
+                                            "#0072c6",
+                                            "#00bcf2"
+                                        ],
+                                        "valueColorMapping": []
+                                    }
+                                },
+                                "Advanced": {
+                                    "DataFlowVerification": {
+                                        "Enabled": false,
+                                        "Query": "search * | limit 1 | project TimeGenerated",
+                                        "Message": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                
                 {
                     
                     "apiVersion": "2015-11-01-preview",
-                    "name": "Azure Backup Monitoring Solution",
+                    "name": "Azure Backup Monitoring and Reporting Solution",
                     "type": "views",
                     "location": "[parameters('location')]",
                     "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Azure Backup Monitoring Solution')]",
@@ -779,473 +1239,7 @@
                             "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspaceName'), variables('omsSolutions').customSolution.name)]"
                         ]
                     }
-                },
-
-                {
-                    "apiVersion": "2015-11-01-preview",
-                    "name": "Jobs",
-                    "type": "views",
-                    "location": "[parameters('location')]",
-                    "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Jobs')]",
-                    "dependson": [
-                        "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
-                    ],
-                    "properties": {
-                        "Id": "Jobs",
-                        "Name": "Jobs",
-                        "Author": null,
-                        "Source": "Local",
-                        "Version": 2,
-                        "Dashboard": [
-                            {
-                                "Id": "LineChartBuilderBlade",
-                                "Type": "Blade",
-                                "Version": 0,
-                                "Configuration": {
-                                    "General": {
-                                        "title": "Total Jobs by Job Status",
-                                        "newGroup": false,
-                                        "icon": "",
-                                        "useIcon": false
-                                    },
-                                    "Header": {
-                                        "Title": "Job Status",
-                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
-                                    },
-                                    "LineChart": {
-                                        "Query": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by bin(TimeGenerated, 1h) , JobStatus_s | sort by count_JobUniqueId_g desc",
-                                        "yAxis": {
-                                            "isLogarithmic": false,
-                                            "units": {
-                                                "baseUnitType": "Count",
-                                                "baseUnit": "Ones",
-                                                "displayUnit": "Ones"
-                                            },
-                                            "customLabel": "No of jobs"
-                                        },
-                                        "NavigationSelect": {}
-                                    },
-                                    "List": {
-                                        "Query": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by JobStatus_s | sort by count_JobUniqueId_g desc",
-                                        "HideGraph": false,
-                                        "enableSparklines": false,
-                                        "operation": "Count",
-                                        "ColumnsTitle": {
-                                            "Name": "Job Status",
-                                            "Value": "Count"
-                                        },
-                                        "Color": "#0072c6",
-                                        "thresholds": {
-                                            "isEnabled": false,
-                                            "values": [
-                                                {
-                                                    "name": "Normal",
-                                                    "threshold": "Default",
-                                                    "color": "#009e49",
-                                                    "isDefault": true
-                                                },
-                                                {
-                                                    "name": "Warning",
-                                                    "threshold": "60",
-                                                    "color": "#fcd116",
-                                                    "isDefault": false
-                                                },
-                                                {
-                                                    "name": "Error",
-                                                    "threshold": "90",
-                                                    "color": "#ba141a",
-                                                    "isDefault": false
-                                                }
-                                            ]
-                                        },
-                                        "NameDSVSeparator": "",
-                                        "NavigationQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by JobStatus_s | sort by count_JobUniqueId_g desc | search {selected item} ",
-                                        "NavigationSelect": {
-                                            "NavigationQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap| join(Jobs) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | summarize count(JobUniqueId_g) by JobStatus_s | sort by count_JobUniqueId_g desc | search {selected item} "
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "Id": "SingleQueryDonutBuilderBladeV1",
-                                "Type": "Blade",
-                                "Version": 0,
-                                "Configuration": {
-                                    "General": {
-                                        "title": "Failed jobs by Failure Code",
-                                        "newGroup": false,
-                                        "icon": "",
-                                        "useIcon": false
-                                    },
-                                    "Header": {
-                                        "Title": "Failed jobs by Failure Code",
-                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
-                                    },
-                                    "Donut": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"| extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc ",
-                                        "CenterLegend": {
-                                            "Text": "Total",
-                                            "Operation": "Sum",
-                                            "ArcsToSelect": []
-                                        },
-                                        "Options": {
-                                            "colors": [
-                                                "#00188f",
-                                                "#0072c6",
-                                                "#00bcf2"
-                                            ],
-                                            "valueColorMapping": []
-                                        },
-                                        "NavigationSelect": {}
-                                    },
-                                    "List": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc ",
-                                        "HideGraph": false,
-                                        "enableSparklines": false,
-                                        "operation": "Summary",
-                                        "ColumnsTitle": {
-                                            "Name": "Failure Code",
-                                            "Value": "Count"
-                                        },
-                                        "Color": "#0072c6",
-                                        "thresholds": {
-                                            "isEnabled": false,
-                                            "values": [
-                                                {
-                                                    "name": "Normal",
-                                                    "threshold": "Default",
-                                                    "color": "#009e49",
-                                                    "isDefault": true
-                                                },
-                                                {
-                                                    "name": "Warning",
-                                                    "threshold": "60",
-                                                    "color": "#fcd116",
-                                                    "isDefault": false
-                                                },
-                                                {
-                                                    "name": "Error",
-                                                    "threshold": "90",
-                                                    "color": "#ba141a",
-                                                    "isDefault": false
-                                                }
-                                            ]
-                                        },
-                                        "NameDSVSeparator": "",
-                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc |search {selected item} ",
-                                        "NavigationSelect": {
-                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let Jobs=AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"; BackupIdTypeMap | join (Jobs) on BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobStatus_s == \"Failed\" | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize count(JobUniqueId_g) by JobFailureCode_s |sort by count_JobUniqueId_g desc |search {selected item} "
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "Id": "NumberTileListBuilderBlade",
-                                "Type": "Blade",
-                                "Version": 0,
-                                "Configuration": {
-                                    "General": {
-                                        "title": "Jobs by Job Creation Time",
-                                        "newGroup": false,
-                                        "icon": "",
-                                        "useIcon": false
-                                    },
-                                    "Tile": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\") on BackupItemUniqueId_s| summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | count",
-                                        "Legend": "Total no of jobs",
-                                        "NavigationSelect": {}
-                                    },
-                                    "List": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join (AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | extend timeOfDay=datetime_part(\"Hour\",TimeGenerated) | summarize count(JobUniqueId_g) by bin(timeOfDay,3) | extend timeBucketStart24 = iff(timeOfDay-1.5>0,timeOfDay-1.5,timeOfDay-1.5+24), timeBucketEnd24=iff(timeOfDay+1.5<24,timeOfDay+1.5,timeOfDay+1.5-24) | extend timeBucketStart12=iff(timeBucketStart24>12,timeBucketStart24-12, timeBucketStart24) , timeBucketStartMeridian = iff(timeBucketStart24<12,\"AM\", iff(timeBucketStart24<24,\"PM\",\"AM\")), timeBucketEnd12=iff(timeBucketEnd24>12,timeBucketEnd24-12, timeBucketEnd24) , timeBucketEndMeridian = iff(timeBucketEnd24<12,\"AM\", iff(timeBucketEnd24<24,\"PM\",\"AM\")) | project timeBucketStart24, timeBucketStart12 , timeBucketEnd12 , timeBucketStartMeridian , timeBucketEndMeridian , count_JobUniqueId_g | extend timeBucketStartHr=toint(timeBucketStart12), timeBucketStartMin=toint((timeBucketStart12-floor(timeBucketStart12,1))*60), timeBucketEndHr=toint(timeBucketEnd12), timeBucketEndMin=toint((timeBucketEnd12-floor(timeBucketEnd12,1))*60)| extend timeBucketStartMinString=iff(timeBucketStartMin>9,tostring(timeBucketStartMin),iff(timeBucketStartMin>0,strcat(\"0\",timeBucketStartMin), \"00\")), timeBucketEndMinString=iff(timeBucketEndMin>9,tostring(timeBucketEndMin),iff(timeBucketEndMin>0,strcat(\"0\",timeBucketEndMin), \"00\")) | extend timeBucketString = strcat(tostring(timeBucketStartHr),\":\",timeBucketStartMinString,timeBucketStartMeridian, \"-\",tostring(timeBucketEndHr), \":\", timeBucketEndMinString,timeBucketEndMeridian) |project timeBucketString , count_JobUniqueId_g |sort by count_JobUniqueId_g desc",
-                                        "HideGraph": false,
-                                        "enableSparklines": false,
-                                        "operation": "Summary",
-                                        "ColumnsTitle": {
-                                            "Name": "Time of Day",
-                                            "Value": "Count"
-                                        },
-                                        "Color": "#0072c6",
-                                        "thresholds": {
-                                            "isEnabled": false,
-                                            "values": [
-                                                {
-                                                    "name": "Normal",
-                                                    "threshold": "Default",
-                                                    "color": "#009e49",
-                                                    "isDefault": true
-                                                },
-                                                {
-                                                    "name": "Warning",
-                                                    "threshold": "60",
-                                                    "color": "#fcd116",
-                                                    "isDefault": false
-                                                },
-                                                {
-                                                    "name": "Error",
-                                                    "threshold": "90",
-                                                    "color": "#ba141a",
-                                                    "isDefault": false
-                                                }
-                                            ]
-                                        },
-                                        "NameDSVSeparator": "",
-                                        "NavigationQuery": "",
-                                        "NavigationSelect": {
-                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join (AzureDiagnostics | where Category == \"AzureBackupReport\"|extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | extend timeOfDay=datetime_part(\"Hour\",TimeGenerated) | summarize count(JobUniqueId_g) by bin(timeOfDay,3) | extend timeBucketStart24 = iff(timeOfDay-1.5>0,timeOfDay-1.5,timeOfDay-1.5+24), timeBucketEnd24=iff(timeOfDay+1.5<24,timeOfDay+1.5,timeOfDay+1.5-24) | extend timeBucketStart12=iff(timeBucketStart24>12,timeBucketStart24-12, timeBucketStart24) , timeBucketStartMeridian = iff(timeBucketStart24<12,\"AM\", iff(timeBucketStart24<24,\"PM\",\"AM\")), timeBucketEnd12=iff(timeBucketEnd24>12,timeBucketEnd24-12, timeBucketEnd24) , timeBucketEndMeridian = iff(timeBucketEnd24<12,\"AM\", iff(timeBucketEnd24<24,\"PM\",\"AM\")) | project timeBucketStart24, timeBucketStart12 , timeBucketEnd12 , timeBucketStartMeridian , timeBucketEndMeridian , count_JobUniqueId_g | extend timeBucketStartHr=toint(timeBucketStart12), timeBucketStartMin=toint((timeBucketStart12-floor(timeBucketStart12,1))*60), timeBucketEndHr=toint(timeBucketEnd12), timeBucketEndMin=toint((timeBucketEnd12-floor(timeBucketEnd12,1))*60)| extend timeBucketStartMinString=iff(timeBucketStartMin>9,tostring(timeBucketStartMin),iff(timeBucketStartMin>0,strcat(\"0\",timeBucketStartMin), \"00\")), timeBucketEndMinString=iff(timeBucketEndMin>9,tostring(timeBucketEndMin),iff(timeBucketEndMin>0,strcat(\"0\",timeBucketEndMin), \"00\")) | extend timeBucketString = strcat(tostring(timeBucketStartHr),\":\",timeBucketStartMinString,timeBucketStartMeridian, \"-\",tostring(timeBucketEndHr), \":\", timeBucketEndMinString,timeBucketEndMeridian) |project timeBucketString , count_JobUniqueId_g |sort by count_JobUniqueId_g desc | search {selected item}"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "Id": "SingleQueryDonutBuilderBladeV1",
-                                "Type": "Blade",
-                                "Version": 0,
-                                "Configuration": {
-                                    "General": {
-                                        "title": "Top 5 Backup Items by Job Duration",
-                                        "newGroup": false,
-                                        "icon": "",
-                                        "useIcon": false
-                                    },
-                                    "Header": {
-                                        "Title": "Total Job Duration (Hrs)",
-                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
-                                    },
-                                    "Donut": {
-                                        "Query": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc",
-                                        "CenterLegend": {
-                                            "Text": "Total",
-                                            "Operation": "Sum",
-                                            "ArcsToSelect": []
-                                        },
-                                        "Options": {
-                                            "colors": [
-                                                "#00188f",
-                                                "#0072c6",
-                                                "#00bcf2"
-                                            ],
-                                            "valueColorMapping": []
-                                        },
-                                        "NavigationSelect": {}
-                                    },
-                                    "List": {
-                                        "Query": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc",
-                                        "HideGraph": false,
-                                        "enableSparklines": false,
-                                        "operation": "Summary",
-                                        "ColumnsTitle": {
-                                            "Name": "Backup Item",
-                                            "Value": "Total Job Duration (hrs)"
-                                        },
-                                        "Color": "#0072c6",
-                                        "thresholds": {
-                                            "isEnabled": false,
-                                            "values": [
-                                                {
-                                                    "name": "Normal",
-                                                    "threshold": "Default",
-                                                    "color": "#009e49",
-                                                    "isDefault": true
-                                                },
-                                                {
-                                                    "name": "Warning",
-                                                    "threshold": "60",
-                                                    "color": "#fcd116",
-                                                    "isDefault": false
-                                                },
-                                                {
-                                                    "name": "Error",
-                                                    "threshold": "90",
-                                                    "color": "#ba141a",
-                                                    "isDefault": false
-                                                }
-                                            ]
-                                        },
-                                        "NameDSVSeparator": "",
-                                        "NavigationQuery": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc | search {selected item}",
-                                        "NavigationSelect": {
-                                            "NavigationQuery": "let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where BackupItemFriendlyName_s != \"\" | project TimeGenerated, BackupItemType_s, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let ContainerIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where ProtectedContainerFriendlyName_s != \"\" | project TimeGenerated, ProtectedContainerFriendlyName_s , ProtectedContainerUniqueId_s, BackupItemType_s | summarize arg_max(TimeGenerated, *) by ProtectedContainerUniqueId_s; let Jobs = AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where ${JobOperation} | where ${JobOperationSubType} | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | project BackupItemUniqueId_s, JobUniqueId_g , JobDurationInSecs_s, ProtectedContainerUniqueId_s; let Table1 = Jobs | join kind=leftouter (ContainerIdNameMap) on ProtectedContainerUniqueId_s; let Table2 = BackupIdNameMap | join (Table1) on BackupItemUniqueId_s; Table2 | where ${DatasourceType} |where BackupItemFriendlyName_s !=\"\" | summarize totalDurationInHrs = round(sum(todouble(JobDurationInSecs_s)/3600),2) by BackupItemFriendlyName_s | sort by totalDurationInHrs desc | search {selected item}"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "Id": "NumberTileListBuilderBlade",
-                                "Type": "Blade",
-                                "Version": 0,
-                                "Configuration": {
-                                    "General": {
-                                        "title": "Jobs by Job Duration",
-                                        "newGroup": false,
-                                        "icon": "",
-                                        "useIcon": false
-                                    },
-                                    "Tile": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")| where JobUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | count",
-                                        "Legend": "Total no of jobs",
-                                        "NavigationSelect": {}
-                                    },
-                                    "List": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Job\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize dcount(JobUniqueId_g) by bin(todouble(JobDurationInSecs_s), 600) | extend JobDurationInMin = todouble(JobDurationInSecs_s) / 60 | extend JobDurationLowerLimit=iff(JobDurationInMin>5,JobDurationInMin - 5,todouble(0)), JobDurationUpperLimit = JobDurationInMin + 5 | extend JobDurationString=strcat(tostring(JobDurationLowerLimit),\" to \",tostring(JobDurationUpperLimit), \" min\") | project JobDurationString , dcount_JobUniqueId_g | sort by dcount_JobUniqueId_g desc",
-                                        "HideGraph": false,
-                                        "enableSparklines": false,
-                                        "operation": "Summary",
-                                        "ColumnsTitle": {
-                                            "Name": "Job Duration",
-                                            "Value": "No of Jobs"
-                                        },
-                                        "Color": "#0072c6",
-                                        "thresholds": {
-                                            "isEnabled": false,
-                                            "values": [
-                                                {
-                                                    "name": "Normal",
-                                                    "threshold": "Default",
-                                                    "color": "#009e49",
-                                                    "isDefault": true
-                                                },
-                                                {
-                                                    "name": "Warning",
-                                                    "threshold": "60",
-                                                    "color": "#fcd116",
-                                                    "isDefault": false
-                                                },
-                                                {
-                                                    "name": "Error",
-                                                    "threshold": "90",
-                                                    "color": "#ba141a",
-                                                    "isDefault": false
-                                                }
-                                            ]
-                                        },
-                                        "NameDSVSeparator": "",
-                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Job\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize dcount(JobUniqueId_g) by bin(todouble(JobDurationInSecs_s), 600) | extend JobDurationInMin = todouble(JobDurationInSecs_s) / 60 | extend JobDurationLowerLimit=iff(JobDurationInMin>5,JobDurationInMin - 5,todouble(0)), JobDurationUpperLimit = JobDurationInMin + 5 | extend JobDurationString=strcat(tostring(JobDurationLowerLimit),\" to \",tostring(JobDurationUpperLimit), \" min\") | project JobDurationString , dcount_JobUniqueId_g | sort by dcount_JobUniqueId_g desc | search {selected item}",
-                                        "NavigationSelect": {
-                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Job\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\")) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize dcount(JobUniqueId_g) by bin(todouble(JobDurationInSecs_s), 600) | extend JobDurationInMin = todouble(JobDurationInSecs_s) / 60 | extend JobDurationLowerLimit=iff(JobDurationInMin>5,JobDurationInMin - 5,todouble(0)), JobDurationUpperLimit = JobDurationInMin + 5 | extend JobDurationString=strcat(tostring(JobDurationLowerLimit),\" to \",tostring(JobDurationUpperLimit), \" min\") | project JobDurationString , dcount_JobUniqueId_g | sort by dcount_JobUniqueId_g desc | search {selected item}"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "Id": "LineChartBuilderBlade",
-                                "Type": "Blade",
-                                "Version": 0,
-                                "Configuration": {
-                                    "General": {
-                                        "title": "Jobs by Total Data Transferred",
-                                        "newGroup": false,
-                                        "icon": "",
-                                        "useIcon": false
-                                    },
-                                    "Header": {
-                                        "Title": "Jobs by Total Data Transferred (MB)",
-                                        "Subtitle": "Filter by Job Type and Datasource Type by clicking the (+) above"
-                                    },
-                                    "LineChart": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join (AzureDiagnostics | where Category == \"AzureBackupReport\"| extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize sum(todouble(DataTransferredInMB_s)) by bin(TimeGenerated, 1d), JobOperation_s ",
-                                        "yAxis": {
-                                            "isLogarithmic": false,
-                                            "units": {
-                                                "baseUnitType": "",
-                                                "baseUnit": "",
-                                                "displayUnit": ""
-                                            },
-                                            "customLabel": "Data Transferred (MB)"
-                                        },
-                                        "NavigationSelect": {}
-                                    },
-                                    "List": {
-                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize totalDataTransferred=sum(todouble(DataTransferredInMB_s)) by JobOperation_s | sort by totalDataTransferred desc ",
-                                        "HideGraph": false,
-                                        "enableSparklines": false,
-                                        "operation": "Summary",
-                                        "ColumnsTitle": {
-                                            "Name": "Type",
-                                            "Value": "Count"
-                                        },
-                                        "Color": "#0072c6",
-                                        "thresholds": {
-                                            "isEnabled": false,
-                                            "values": [
-                                                {
-                                                    "name": "Normal",
-                                                    "threshold": "Default",
-                                                    "color": "#009e49",
-                                                    "isDefault": true
-                                                },
-                                                {
-                                                    "name": "Warning",
-                                                    "threshold": "60",
-                                                    "color": "#fcd116",
-                                                    "isDefault": false
-                                                },
-                                                {
-                                                    "name": "Error",
-                                                    "threshold": "90",
-                                                    "color": "#ba141a",
-                                                    "isDefault": false
-                                                }
-                                            ]
-                                        },
-                                        "NameDSVSeparator": "",
-                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize totalDataTransferred=sum(todouble(DataTransferredInMB_s)) by JobOperation_s | sort by totalDataTransferred desc | search {selected item}",
-                                        "NavigationSelect": {
-                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join(AzureDiagnostics | where Category == \"AzureBackupReport\" | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" | summarize arg_max(TimeGenerated, *) by JobUniqueId_g) on BackupItemUniqueId_s | where ${JobOperation} | where ${JobOperationSubType} | where ${DatasourceType} | summarize totalDataTransferred=sum(todouble(DataTransferredInMB_s)) by JobOperation_s | sort by totalDataTransferred desc | search {selected item}"
-                                        }
-                                    }
-                                }
-                            }
-                        ],
-                        "Filters": [
-                            {
-                                "FieldName": "JobOperationSubType_s",
-                                "QueryForValues": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobOperationSubType_s!=\"\" | distinct JobOperationSubType_s ",
-                                "Title": "JobOperationSubType"
-                            },
-                            {
-                                "FieldName": "JobOperation_s",
-                                "QueryForValues": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | summarize arg_max(TimeGenerated, *) by JobUniqueId_g | where JobOperation_s!=\"\" | distinct JobOperation_s",
-                                "Title": "JobOperation"
-                            },
-                            {
-                                "FieldName": "BackupItemType_s",
-                                "QueryForValues": "AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | distinct BackupItemType_s",
-                                "Title": "DatasourceType"
-                            }
-                        ],
-                        "OverviewTile": {
-                            "Id": "SingleQueryDonutBuilderTileV1",
-                            "Type": "OverviewTile",
-                            "Version": 2,
-                            "Configuration": {
-                                "Donut": {
-                                    "Query": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" and JobOperation_s == \"Backup\" | summarize dcount(JobUniqueId_g) by JobStatus_s",
-                                    "CenterLegend": {
-                                        "Text": "Total",
-                                        "Operation": "Sum",
-                                        "ArcsToSelect": []
-                                    },
-                                    "Options": {
-                                        "colors": [
-                                            "#55d455",
-                                            "#0072c6",
-                                            "#00bcf2"
-                                        ],
-                                        "valueColorMapping": []
-                                    }
-                                },
-                                "Advanced": {
-                                    "DataFlowVerification": {
-                                        "Enabled": false,
-                                        "Query": "search * | limit 1 | project TimeGenerated",
-                                        "Message": ""
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
+               
         }
     ]
 }
