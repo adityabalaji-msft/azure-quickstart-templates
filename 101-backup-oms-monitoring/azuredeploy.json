@@ -36,9 +36,6 @@
                     "name": "[concat(parameters('workspaceName'), '/', 'Backup Jobs (Non Log)')]",
                     "type": "Microsoft.OperationalInsights/workspaces/views",
                     "location": "[parameters('workspaceLocation')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
-                    ],
                     "properties": {
                         "Id": "Backup Jobs (Non Log)",
                         "Name": "Backup Jobs (Non Log)",
