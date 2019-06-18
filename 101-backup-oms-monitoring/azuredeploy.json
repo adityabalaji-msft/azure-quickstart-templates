@@ -17,11 +17,8 @@
         "workspace": {
             "type": "string",
             "defaultValue": ""
-        },
-        "workspaceapiversion": {
-            "type": "string",
-            "defaultValue": ""
         }
+        
     },
     "variables": {
         "omsSolutions": {
@@ -37,7 +34,7 @@
     },
     "resources": [
         {
-            "apiVersion": "[parameters('workspaceapiversion')]",
+            "apiVersion": "2015-11-01-preview",
             "name": "[parameters('workspace')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",
