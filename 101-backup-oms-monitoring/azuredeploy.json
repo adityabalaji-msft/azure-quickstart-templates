@@ -38,7 +38,7 @@
 			"resources": [{
 					"apiVersion": "2015-11-01-preview",
 					"name": "Azure Backup Monitoring and Reporting Solution",
-					"type": "views",
+					"type": "Microsoft.OperationalInsights/workspaces/views",
 					"location": "[parameters('workspaceLocation')]",
 					"dependsOn": [
 						"[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
@@ -712,7 +712,7 @@
 							{
                                 "apiVersion": "2015-11-01-preview",
                                 "name": "Backup Jobs (Log)",
-                                "type": "views",
+                                "type": "Microsoft.OperationalInsights/workspaces/views",
                                 "location": "[parameters('workspaceLocation')]",
                                 "dependsOn": [
                                     "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
@@ -1279,7 +1279,7 @@
                             {
 								"apiVersion": "2015-11-01-preview",
 								"name": "Backup Jobs (Non Log)",
-								"type": "views",
+								"type": "Microsoft.OperationalInsights/workspaces/views",
 								"location": "[parameters('workspaceLocation')]",
 								"dependsOn": [
 									"[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
