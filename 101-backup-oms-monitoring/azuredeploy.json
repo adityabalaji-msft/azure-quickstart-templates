@@ -36,8 +36,7 @@
             "name": "[parameters('workspaceName')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('workspaceLocation')]",
-            "resources": [
-                
+            "resources": [           
                 {
                     "apiVersion": "2015-11-01-preview",
                     "name": "Azure Backup Monitoring and Reporting Solution",
@@ -758,10 +757,9 @@
                                     }
                                 }
                             }
-                        }
-                    }
-                },
-
+                        },
+                        "resources":[
+                                
                 {
                     "apiVersion": "2015-11-01-preview",
                     "name": "Backup Jobs (Non Log)",
@@ -1365,6 +1363,10 @@
                         }
                     }
                 }
+                        ]
+                    }
+                }
+
             ]
         }
     ]
