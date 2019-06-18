@@ -722,7 +722,7 @@
             "type": "Microsoft.OperationalInsights/workspaces/views",
             "location": "[parameters('workspaceLocation')]",
             "dependsOn": [
-                "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+                "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'), 'Azure Backup Monitoring and Reporting Solution')]"
             ],
             "properties": {
                 "Id": "Backup Jobs (Non Log)",
