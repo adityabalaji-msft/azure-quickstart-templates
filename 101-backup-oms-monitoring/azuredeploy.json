@@ -42,6 +42,10 @@
                     "name": "Azure Backup Monitoring and Reporting Solution",
                     "type": "views",
                     "location": "[parameters('workspaceLocation')]",
+                    "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Azure Backup Monitoring and Reporting Solution')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+                    ],
                     "properties": {
                         "Id": "Azure Backup Monitoring and Reporting Solution",
                         "Name": "Azure Backup Monitoring and Reporting Solution",
