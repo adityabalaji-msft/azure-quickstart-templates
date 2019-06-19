@@ -6,19 +6,16 @@
 | git diff | Show file differences that haven't been staged |
 
 | Dashboard | Deployment Link |
-
 | --- | --- |
-
-|Summary Dashboard |  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/
-https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fazurebackup_monitoring_reporting_soln.json" target="_blank">
+| Summary Dashboard |  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fazurebackup_monitoring_reporting_soln.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
-</a>
+</a> |
 
 
-| Backup Jobs (Non Log) Dashboard |  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fbackup_jobs_non_log.json" target="_blank">
+| Backup Jobs (Non Log) Dashboard |  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fbackup_jobs_non_log.json" target="_blank"> 
 
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
-</a>
+</a> | 
 
 
 Backup Jobs (Log) Dashboard: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fbackup_jobs_log.json" target="_blank">
