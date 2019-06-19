@@ -32,13 +32,13 @@
     "resources": 
     [
         {
-            "apiVersion": "2015-11-01-preview",
+            "apiVersion": "2015-11-0",
             "name": "[parameters('workspaceName')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('workspaceLocation')]",
             "resources": [
                 {
-                    "apiVersion": "2015-11-01-preview",
+                    "apiVersion": "2015-11-01",
                     "name": "azurebackup_monitoring_reporting_soln",
                     "type": "Microsoft.Resources/deployments",
                     "location": "[parameters('workspaceLocation')]",
@@ -54,7 +54,7 @@
                 },
 
                 {
-                    "apiVersion": "2015-11-01-preview",
+                    "apiVersion": "2015-11-01",
                     "name": "backup_jobs_log",
                     "type": "Microsoft.Resources/deployments",
                     "location": "[parameters('workspaceLocation')]",
@@ -70,7 +70,7 @@
                 },
 
                 {
-                    "apiVersion": "2015-11-01-preview",
+                    "apiVersion": "2015-11-01",
                     "name": "backup_jobs_non_log",
                     "type": "Microsoft.Resources/deployments",
                     "location": "[parameters('workspaceLocation')]",
@@ -86,7 +86,7 @@
                 },
 
                 {
-                    "apiVersion": "2015-11-01-preview",
+                    "apiVersion": "2015-11-01",
                     "name": "alerts_from_azure_resources",
                     "type": "Microsoft.Resources/deployments",
                     "location": "[parameters('workspaceLocation')]",
