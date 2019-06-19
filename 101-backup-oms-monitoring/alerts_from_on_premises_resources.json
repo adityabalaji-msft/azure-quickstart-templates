@@ -1,0 +1,529 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceLocation": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specify the workspace region"
+            }
+        },
+        "workspaceName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specify the workspace name"
+            }
+        }
+    },
+    "variables": {
+        "omsSolutions": {
+            "customSolution": {
+                "name": "Azure Backup Monitoring Solution",
+                "solutionName": "[concat('AzureBackup', '[', parameters('workspaceName'), ']')]",
+                "publisher": "Microsoft",
+                "displayName": "Azure Backup Monitoring Solution",
+                "description": "Monitor and analyze your Backup Vaults",
+                "author": "Microsoft"
+            }
+        }
+    },
+    "resources": 
+    [
+        {
+            "apiVersion": "2015-11-01-preview",
+            "name": "[parameters('workspaceName')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "location": "[parameters('workspaceLocation')]",
+            
+            "resources": [
+                {
+                    "apiVersion": "2015-11-01-preview",
+                    "name": "[concat(parameters('workspaceName'), '/', 'Alerts from On-Premises Resources')]",
+                    "type": "Microsoft.OperationalInsights/workspaces/views",
+                    "location": "[parameters('workspaceLocation')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+                    ],
+                    "properties": {
+                        "Id": "Alerts from On-Premises Resources",
+                        "Name": "Alerts from On-Premises Resources",
+                        "Author": null,
+                        "Source": "Local",
+                        "Version": 2,
+                        "Dashboard": [
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Active Alerts by Alert Type",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Alerts by Alert Type",
+                                        "Subtitle": "Filter by Datasource Type by Clicking the (+) above"
+                                    },
+                                    "Donut": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\")) on BackupItemUniqueId_s | where ${DatasourceType} | summarize count() by AlertType_s | sort by count_ desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" )) on BackupItemUniqueId_s | where ${DatasourceType} | summarize count() by AlertType_s | sort by count_ desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "ColumnsTitle": {
+                                            "Name": "Alert Type",
+                                            "Value": "No of Alerts"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" ) ) on BackupItemUniqueId_s | where ${DatasourceType} | summarize count() by AlertType_s | sort by count_ desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" ) ) on BackupItemUniqueId_s | where ${DatasourceType} | summarize count() by AlertType_s | sort by count_ desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "TwoTrendsAndListBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Alerts Created vs Alerts Resolved",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Trend1": {
+                                        "Legend": "Alerts Created",
+                                        "LegendColor": "#00188f",
+                                        "ChartQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend AlertUniqueId=AlertUniqueId_s )) on BackupItemUniqueId_s | where ${DatasourceType} | summarize count(AlertUniqueId) by bin(TimeGenerated,1h)",
+                                        "Calculation": {
+                                            "Operation": "Sum"
+                                        }
+                                    },
+                                    "Trend2": {
+                                        "Legend": "Alerts Resolved",
+                                        "LegendColor": "#0072c6",
+                                        "ChartQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend AlertUniqueId=AlertUniqueId_s )) on BackupItemUniqueId_s| where AlertStatus_s==\"Resolved\" | where ${DatasourceType} |summarize count(AlertUniqueId) by bin(TimeGenerated,1h)",
+                                        "Calculation": {
+                                            "Operation": "Sum"
+                                        }
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let FullTable = (AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | extend AlertUniqueId=AlertUniqueId_g ); BackupIdTypeMap | join(FullTable | summarize arg_max(TimeGenerated, *) by AlertUniqueId | where AlertUniqueId != \"\" | extend CurrentStatus = AlertStatus_s | join (FullTable | summarize HitCount = count() by AlertUniqueId ) on AlertUniqueId) on BackupItemUniqueId_s | where ${DatasourceType} | project AlertUniqueId , AlertStatus_s, AlertCode_s, HitCount | sort by AlertStatus_s asc, HitCount desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Alert Unique ID",
+                                            "Value": "Hit Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let FullTable = (AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | extend AlertUniqueId=AlertUniqueId_g ); BackupIdTypeMap | join(FullTable | summarize arg_max(TimeGenerated, *) by AlertUniqueId | where AlertUniqueId != \"\" | extend CurrentStatus = AlertStatus_s | join (FullTable | summarize HitCount = count() by AlertUniqueId ) on AlertUniqueId) on BackupItemUniqueId_s | where ${DatasourceType} | project AlertUniqueId , AlertStatus_s, AlertCode_s, HitCount | sort by AlertStatus_s asc, HitCount desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let FullTable = (AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | extend AlertUniqueId=AlertUniqueId_g ); BackupIdTypeMap | join(FullTable | summarize arg_max(TimeGenerated, *) by AlertUniqueId | where AlertUniqueId != \"\" | extend CurrentStatus = AlertStatus_s | join (FullTable | summarize HitCount = count() by AlertUniqueId ) on AlertUniqueId) on BackupItemUniqueId_s | where ${DatasourceType} | project AlertUniqueId , AlertStatus_s, AlertCode_s, HitCount | sort by AlertStatus_s asc, HitCount desc | search {selected item}"
+                                        }
+                                    },
+                                    "Blade": {
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Active Alerts by Severity",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Active Alerts by Severity",
+                                        "Subtitle": "Filter by Datasource Type by clicking the (+) above"
+                                    },
+                                    "Donut": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Active\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) ) on BackupItemUniqueId_s| where ${DatasourceType} | summarize count() by AlertSeverity_s | sort by count_ desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": [
+                                                {
+                                                    "value": "Critical",
+                                                    "color": "#eb3c00"
+                                                },
+                                                {
+                                                    "value": "Warning",
+                                                    "color": "#ff8c00"
+                                                },
+                                                {
+                                                    "value": "Information",
+                                                    "color": "#fff100"
+                                                }
+                                            ]
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Active\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g )) on BackupItemUniqueId_s| where ${DatasourceType} |summarize count() by AlertSeverity_s | sort by count_ desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Alert Severity",
+                                            "Value": "No of Alerts"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Active\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g )) on BackupItemUniqueId_s| where ${DatasourceType} |summarize count() by AlertSeverity_s | sort by count_ desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Active\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g )) on BackupItemUniqueId_s| where ${DatasourceType} |summarize count() by AlertSeverity_s | sort by count_ desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Resolved Alerts by Severity",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Resolved Alerts by Severity",
+                                        "Subtitle": "Filter by Datasource Type by clicking the (+) above"
+                                    },
+                                    "Donut": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Resolved\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) ) on BackupItemUniqueId_s| where ${DatasourceType} | summarize count() by AlertSeverity_s | sort by count_ desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Resolved\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g )) on BackupItemUniqueId_s| where ${DatasourceType} |summarize count() by AlertSeverity_s | sort by count_ desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Alert Severity",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Resolved\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g )) on BackupItemUniqueId_s| where ${DatasourceType} |summarize count() by AlertSeverity_s | sort by count_ desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; BackupIdTypeMap | join ((AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | where AlertStatus_s==\"Resolved\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g )) on BackupItemUniqueId_s| where ${DatasourceType} |summarize count() by AlertSeverity_s | sort by count_ desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Avg Alert Resolution Time per week (hrs)",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Avg Alert Resolution Time per week (hrs)",
+                                        "Subtitle": "Stretch the time axis to see the trend (above time filter)"
+                                    },
+                                    "LineChart": {
+                                        "Query": "let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | where ${DatasourceType} | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts= (AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds= (AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); Table1 | join kind=inner(BackupIdTypeMap) on BackupItemUniqueId_s | summarize avg(timeToResolveInHrs) by bin(TimeGenerated,7d) ",
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) |where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); Table1 | join kind=inner(BackupIdTypeMap) on BackupItemUniqueId_s | summarize avgResolutionTime=avg(timeToResolveInHrs) by weekStart=bin(TimeGenerated,7d) | sort by weekStart desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Week Start",
+                                            "Value": "Average resolution Time (hrs)"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) |where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); Table1 | join kind=inner(BackupIdTypeMap) on BackupItemUniqueId_s | summarize avgResolutionTime=avg(timeToResolveInHrs) by weekStart=bin(TimeGenerated,7d) ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": " let BackupIdTypeMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | project TimeGenerated, BackupItemType_s , BackupItemUniqueId_s | where ${DatasourceType} | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) |where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); Table1 | join kind=inner(BackupIdTypeMap) on BackupItemUniqueId_s | summarize avgResolutionTime=avg(timeToResolveInHrs) by weekStart=bin(TimeGenerated,7d) "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Top 3 backup Items by Avg Alert Resolution time",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Breakup by Avg Alert Resolution time (hrs)",
+                                        "Subtitle": "Filter by Datasource Type by clicking the (+) above"
+                                    },
+                                    "Donut": {
+                                        "Query": " let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where BackupItemFriendlyName_s != \"\" | where ${DatasourceType} | project TimeGenerated, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); let Table2 = Table1 | join kind=inner(BackupIdNameMap) on BackupItemUniqueId_s; Table2 | summarize avg(timeToResolveInHrs) by BackupItemUniqueId_s | sort by avg_timeToResolveInHrs desc ",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": " let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where BackupItemFriendlyName_s != \"\" | where ${DatasourceType} | project TimeGenerated, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); let Table2 = Table1 | join kind=inner(BackupIdNameMap) on BackupItemUniqueId_s; Table2 | summarize avg(timeToResolveInHrs) by BackupItemUniqueId_s, BackupItemFriendlyName_s | sort by avg_timeToResolveInHrs desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Computer",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": " let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where BackupItemFriendlyName_s != \"\" | where ${DatasourceType} | project TimeGenerated, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); let Table2 = Table1 | join kind=inner(BackupIdNameMap) on BackupItemUniqueId_s; Table2 | summarize avg(timeToResolveInHrs) by BackupItemUniqueId_s, BackupItemFriendlyName_s | sort by avg_timeToResolveInHrs desc | search {selected item}",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": " let BackupIdNameMap = AzureDiagnostics | where Category == \"AzureBackupReport\" | where BackupItemFriendlyName_s != \"\" | where ${DatasourceType} | project TimeGenerated, BackupItemFriendlyName_s , BackupItemUniqueId_s | summarize arg_max(TimeGenerated, *) by BackupItemUniqueId_s; let AlertStarts=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_min(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | extend startTime=TimeGenerated; let AlertEnds=(AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"Alert\" | summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertUniqueId_g != \"\" | extend ResourceLocation=\"Azure\", AlertUniqueId=AlertUniqueId_g ) | where AlertStatus_s==\"Resolved\" | extend endTime=TimeGenerated; let Table1 = AlertStarts | join (AlertEnds) on AlertUniqueId | extend timeToResolveInHrs=datetime_diff(\"hour\",endTime,startTime); let Table2 = Table1 | join kind=inner(BackupIdNameMap) on BackupItemUniqueId_s; Table2 | summarize avg(timeToResolveInHrs) by BackupItemUniqueId_s, BackupItemFriendlyName_s | sort by avg_timeToResolveInHrs desc | search {selected item}"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "Filters": [],
+                        "OverviewTile": {
+                            "Id": "DoubleNumberBuilderTile",
+                            "Type": "OverviewTile",
+                            "Version": 2,
+                            "Configuration": {
+                                "TileOne": {
+                                    "Legend": "Alerts Created in Period",
+                                    "Query": "AzureDiagnostics | where Category == \"AzureBackupReport\"| where OperationName == \"Alert\" | where AlertUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | count "
+                                },
+                                "TileTwo": {
+                                    "Legend": "Active Alerts Created in Period",
+                                    "Query": "AzureDiagnostics | where Category == \"AzureBackupReport\"| where OperationName == \"Alert\" | where AlertUniqueId_g!=\"\"| summarize arg_max(TimeGenerated, *) by AlertUniqueId_g | where AlertStatus_s == \"Active\" | count "
+                                },
+                                "Advanced": {
+                                    "DataFlowVerification": {
+                                        "Enabled": false,
+                                        "Query": "search * | limit 1 | project TimeGenerated",
+                                        "Message": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]   
+}
