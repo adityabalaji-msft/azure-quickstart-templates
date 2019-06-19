@@ -7,7 +7,7 @@
 
 | Dashboard | Deployment Link |
 
-|--------------------------------------------|--------------------------------------------|
+| --- |---|
 
 |Summary Dashboard |  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/
 https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fazurebackup_monitoring_reporting_soln.json" target="_blank">
