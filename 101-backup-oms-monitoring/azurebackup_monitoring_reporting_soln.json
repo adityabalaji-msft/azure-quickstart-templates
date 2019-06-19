@@ -218,7 +218,7 @@
 										}
 									},
 									"List": {
-										"Query": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" and JobOperation_s == \"Backup\" and JobStatus_s == \"Failed\" and (JobOperationSubType_s == \"Log\" or JobOperationSubType_s == \"Recovery point_Log\") | project BackupItemUniqueId_s, JobStatus_s, Resource | join kind=inner ( Events | where OperationName == \"BackupItem\" | distinct BackupItemUniqueId_s, BackupItemFriendlyName_s | project BackupItemUniqueId_s , BackupItemFriendlyName_s ) on BackupItemUniqueId_s | project BackupItemFriendlyName_s , JobStatus_s, Resource | extend Vault= Resource | summarize count() by BackupItemFriendlyName_s, JobStatus_s, Vault | order by count_ desc",
+										"Query": "let Events = AzureDiagnostics | where Category == \"AzureBackupReport\" ; Events | extend JobOperationSubType_s = columnifexists(\"JobOperationSubType_s\", \"\") | where OperationName == \"Job\" and JobOperation_s == \"Backup\" and (JobOperationSubType_s == \"Log\" or JobOperationSubType_s == \"Recovery point_Log\") | project BackupItemUniqueId_s, JobStatus_s, Resource | join kind=inner ( Events | where OperationName == \"BackupItem\" | distinct BackupItemUniqueId_s, BackupItemFriendlyName_s | project BackupItemUniqueId_s , BackupItemFriendlyName_s ) on BackupItemUniqueId_s | project BackupItemFriendlyName_s , JobStatus_s, Resource | extend Vault= Resource | summarize count() by BackupItemFriendlyName_s, JobStatus_s, Vault | order by count_ desc",
 										"HideGraph": false,
 										"enableSparklines": false,
 										"operation": "Summary",
