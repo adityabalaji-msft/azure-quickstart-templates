@@ -37,8 +37,10 @@
 					"apiVersion": "2015-11-01",
 					"name": "[concat(parameters('workspaceName'), '/', 'Azure Backup Monitoring and Reporting Solution')]",
 					"type": "Microsoft.OperationalInsights/workspaces/views",
-					
-					
+					"location": "[parameters('workspaceLocation')]",
+					"dependsOn": [
+						"[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+					],
 					"properties": {
 						"Id": "Azure Backup Monitoring and Reporting Solution",
 						"Name": "Azure Backup Monitoring and Reporting Solution",
