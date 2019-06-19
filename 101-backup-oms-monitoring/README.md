@@ -2,13 +2,17 @@
 
 Overall: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fazurebackup_monitoring_reporting_soln.json" target="_blank">
 
+<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+
 Backup Jobs (Non Log) Dashboard: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fbackup_jobs_non_log.json" target="_blank">
+
+<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 
 Backup Jobs (Log) Dashboard: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fbackup_jobs_log.json" target="_blank">
 
+<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+
 Alerts from Azure Resources Dashboard: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Falerts_from_azure_resources.json" target="_blank">
-
-
 
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 </a>
