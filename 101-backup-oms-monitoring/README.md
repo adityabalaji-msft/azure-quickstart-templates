@@ -1,12 +1,29 @@
 # OMS monitoring solution for Azure Backup
 
-| Command | Description |
-| --- | --- |
-| git status | List all new or modified files |
-| git diff | Show file differences that haven't been staged |
+<table style="width:100%">
+  <tr>
+    <th>Dashboard Type</th>
+    <th>Deployment Link</th> 
+    
+  </tr>
+  <tr>
+    <td>Summary</td>
+    <td>
+        <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fazurebackup_monitoring_reporting_soln.json" target="_blank">
+        <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+        </a>
+    </td>  
+  </tr>
+  <tr>
+    <td>Backup Jobs (Non Log)</td>
+    <td>
+        <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fbackup_jobs_non_log.json" target="_blank"> 
+        <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+        </a>
+       </td> 
+  </tr>
+</table>
 
-| Dashboard | Deployment Link |
-| --- | --- |
 | Summary Dashboard |  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadityabalaji-msft%2Fazure-quickstart-templates%2Fadbalaji-working-branch%2F101-backup-oms-monitoring%2Fazurebackup_monitoring_reporting_soln.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 </a> |
