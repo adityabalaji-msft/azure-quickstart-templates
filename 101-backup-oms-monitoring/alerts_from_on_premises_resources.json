@@ -498,7 +498,12 @@
                                 }
                             }
                         ],
-                        "Filters": [],
+                        "Filters": [{
+                            "FieldName": "BackupItemType_s",
+                            "QueryForValues": "AzureDiagnostics | where Category == \"AzureBackupReport\" | where OperationName == \"BackupItem\" | where BackupItemType_s != \"\" | distinct BackupItemType_s",
+                            "Title": "DatasourceType"
+                        }
+                    ],
                         "OverviewTile": {
                             "Id": "DoubleNumberBuilderTile",
                             "Type": "OverviewTile",
