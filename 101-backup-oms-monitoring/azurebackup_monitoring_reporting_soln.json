@@ -32,9 +32,16 @@
     "resources": 
     [
         {
-            
+            "apiVersion": "2015-11-01",
+            "name": "[parameters('workspaceName')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "location": "[parameters('workspaceLocation')]",
+            "resources": [
+                
 
-					"apiVersion": "2015-11-01",
+                {
+
+					"apiVersion": "2015-11-01-preview",
 					"name": "[concat(parameters('workspaceName'), '/', 'Azure Backup Monitoring and Reporting Solution')]",
 					"type": "Microsoft.OperationalInsights/workspaces/views",
 					"location": "[parameters('workspaceLocation')]",
@@ -707,8 +714,9 @@
 							}
 						}
 					}
+                }
                 
-            
+            ]
         }
     ]   
 }
