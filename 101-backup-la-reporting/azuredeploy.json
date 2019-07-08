@@ -44,12 +44,12 @@
           "customSolution":{
              "name":"Azure Backup Monitoring Solution",
              "view1":"Backup+Jobs+%28Non+Log%29",
-             "view2":"backup_jobs_log",
-             "view3":"restore_jobs",
-             "view4":"azure_alerts",
-             "view5":"on_prem_alerts",
-             "view6":"backup_items",
-             "view7":"cloud_storage",
+             "view2":"Backup+Jobs+%28Log%29",
+             "view3":"Restore+Jobs",
+             "view4":"Alerts+from+Azure+Resources+Backup",
+             "view5":"Alerts+from+On-Premises+Resources+Backup",
+             "view6":"Backup+Items",
+             "view7":"Cloud+Storage",
              "solutionName":"[concat('AzureBackup', '[', parameters('workspaceName'), ']')]",
              "publisher":"Microsoft",
              "displayName":"Azure Backup Monitoring and Reporting Solution",
@@ -81,7 +81,7 @@
              },
              {
                 "apiVersion":"2015-11-01",
-                "name":"backup_jobs_log",
+                "name":"Backup+Jobs+%28Log%29",
                 "type":"Microsoft.Resources/deployments",
                 "properties":{
                    "mode":"Incremental",
@@ -99,7 +99,7 @@
                },
              {
                 "apiVersion":"2015-11-01",
-                "name":"restore_jobs",
+                "name":"Restore+Jobs",
                 "type":"Microsoft.Resources/deployments",
                 "properties":{
                    "mode":"Incremental",
@@ -117,7 +117,7 @@
              },
              {
                 "apiVersion":"2015-11-01",
-                "name":"azure_alerts",
+                "name":"Alerts+from+Azure+Resources+Backup",
                 "type":"Microsoft.Resources/deployments",
                 "properties":{
                    "mode":"Incremental",
@@ -135,7 +135,7 @@
              },
              {
                 "apiVersion":"2015-11-01",
-                "name":"on_prem_alerts",
+                "name":"Alerts+from+On-Premises+Resources+Backup",
                 "type":"Microsoft.Resources/deployments",
                
                 "properties":{
@@ -153,7 +153,7 @@
              },
              {
                 "apiVersion":"2015-11-01",
-                "name":"backup_items",
+                "name":"Backup+Items",
                 "type":"Microsoft.Resources/deployments",
                 "properties":{
                    "mode":"Incremental",
@@ -170,13 +170,13 @@
              },
              {
                 "apiVersion":"2015-11-01",
-                "name":"cloud_storage",
+                "name":"Cloud+Storage",
                 "type":"Microsoft.Resources/deployments",
                 
                 "properties":{
                    "mode":"Incremental",
                    "templateLink":{
-                      "uri":"[variables('nestedTemplates').cloud_storage]",
+                      "uri":"[variables('nestedTemplates').Cloud+Storage]",
                       "contentVersion":"1.0.0.0"
                    },
                    "parameters":{
