@@ -43,7 +43,7 @@
        "omsSolutions":{
           "customSolution":{
              "name":"Azure Backup Monitoring Solution",
-             "view1":"backup_jobs_non_log",
+             "view1":"Backup+Jobs+%28Non+Log%29",
              "view2":"backup_jobs_log",
              "view3":"restore_jobs",
              "view4":"azure_alerts",
@@ -62,7 +62,7 @@
           "resources":[
              {
                 "apiVersion":"2015-11-01",
-                "name": "backup_jobs_non_log",
+                "name": "Backup+Jobs+%28Non+Log%29",
                 "type":"Microsoft.Resources/deployments",
                 "properties":{
                    "mode":"Incremental",
