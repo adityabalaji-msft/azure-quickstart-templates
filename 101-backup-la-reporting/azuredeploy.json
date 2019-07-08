@@ -42,7 +42,7 @@
        },
        "omsSolutions":{
           "customSolution":{
-             "name":"Azure Backup Monitoring and Reporting Solution",
+             "name":"Azure Backup Monitoring Solution",
              "view1":"Backup+Jobs+%28Non+Log%29",
              "view2":"Backup+Jobs+%28Log%29",
              "view3":"Restore+Jobs",
