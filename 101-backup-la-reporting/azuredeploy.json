@@ -176,7 +176,7 @@
                 "properties":{
                    "mode":"Incremental",
                    "templateLink":{
-                      "uri":"[variables('nestedTemplates').Cloud+Storage]",
+                      "uri":"[variables('nestedTemplates').cloud_storage]",
                       "contentVersion":"1.0.0.0"
                    },
                    "parameters":{
