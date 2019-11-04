@@ -16,6 +16,11 @@
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
 </a>
 
+>**Note** <br>
+>We recently updated the cloud storage template (in early November 2019) with some query fixes. Existing users who see any discrepancies in the numbers shown in the cloud storage tab are advised to redeploy this solution (by clicking the 'Deploy to Azure' button above) in their workspaces to resolve the issue.*
+
+
+
 This template deploys **LA Monitoring and Reporting solution for Azure backup** on a Log Analytics workspace. This allows you to monitor key backup parameters such as backup and restore jobs, backup alerts and Cloud storage usage across Recovery services vaults.
 
 > **Important** <br>
