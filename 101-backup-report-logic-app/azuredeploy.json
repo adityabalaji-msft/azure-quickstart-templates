@@ -196,7 +196,7 @@
 										}
 									],
 									"Body": "<p><u><strong>Jobs</strong></u><strong><br>\n<br>\n</strong><strong>@{variables('PieChart1')}</strong><strong><br>\n<br>\n</strong><u><strong>List of Jobs in last 24 hrs</strong></u><strong><br>\n<br>\n</strong><strong>@{base64ToString(body('Run_query_and_visualize_results_3')?['body'])}</strong><strong><br>\n<br>\n</strong><a href=\"https://ms.portal.azure.com/#blade/AppInsightsExtension/UsageNotebookBlade/Type/backup-insights/ComponentId/Microsoft_Azure_RecoveryServices/Source/Microsoft_Azure_RecoveryServices/TimeContext//GalleryResourceType/Microsoft_Azure_RecoveryServices/ConfigurationId/Community-Workbooks%2FAzure%20Backup%2FBackup%20Report/ViewerMode/true\">View detailed report</a> in the Azure portal&nbsp;</p>",
-									"Subject": "[Auto] Azure Backup Report",
+									"Subject": "(Auto) Azure Backup Report",
 									"To": "[parameters('emailId')]"
 								},
 								"host": {
