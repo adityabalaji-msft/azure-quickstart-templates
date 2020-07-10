@@ -158,7 +158,7 @@
 							},
 							"type": "ApiConnection",
 							"inputs": {
-								"body": "AddonAzureBackupJobs | summarize arg_max(TimeGenerated,*) by JobUniqueId | project BackupItemUniqueId, JobStartDateTime, JobOperation, JobStatus, ResourceId",
+								"body": "union workspace('/subscriptions/ef4ab5a7-c2c0-4304-af80-af49f48af3d1/resourceGroups/adbalajiRG4/providers/Microsoft.OperationalInsights/workspaces/adbalajiLA4/').AddonAzureBackupJobs, workspace('/subscriptions/ef4ab5a7-c2c0-4304-af80-af49f48af3d1/resourceGroups/adbalajiRG4/providers/Microsoft.OperationalInsights/workspaces/adbalajiLA4/').AddonAzureBackupJobs | summarize arg_max(TimeGenerated,*) by JobUniqueId | project BackupItemUniqueId, JobStartDateTime, JobOperation, JobStatus, ResourceId",
 								"host": {
 									"connection": {
 										"name": "@parameters('$connections')['azuremonitorlogs']['connectionId']"
