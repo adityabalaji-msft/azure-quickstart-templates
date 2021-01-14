@@ -66,7 +66,17 @@
 		"aggregationType": {
 			"defaultValue": "\"Daily\"",
             "type": "String"
+        },
+        "resourceTags": {
+        "type": "object",
+        "defaultValue": {
+            "UsedByBackupReports": "true"
         }
+    },
+     "emailSubject": {
+        "type":"string",
+        "defaultValue":"Backup Reports - Summary"
+    }
     },
     "variables": {},
     "resources": [
@@ -99,6 +109,7 @@
             "apiVersion": "2017-07-01",
             "name": "[concat(parameters('name_prefix'), '-Summary')]",
             "location": "[parameters('location')]",            
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "state": "Enabled",
                 "definition": {
@@ -454,7 +465,7 @@
                             "inputs": {
                                 "body": {
                                     "Body": "<p><u><strong><br>\nSummary Report<br>\n<br>\n</strong></u><u><strong>@{base64ToString(body('Run_query_and_visualize_results')?['body'])}</strong></u><u><strong></strong></u><br>\n<br>\n</p>",
-                                    "Subject": "Summary Report",
+                                    "Subject": "[parameters('emailSubject')]",
                                     "To": "vijeya@microsoft.com"
                                 },
                                 "host": {

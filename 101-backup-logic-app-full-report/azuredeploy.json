@@ -82,7 +82,17 @@
 		"aggregationType": {
 			"defaultValue": "\"Daily\"",
             "type": "String"
+        },
+        "resourceTags": {
+        "type": "object",
+        "defaultValue": {
+            "UsedByBackupReports": "true"
         }
+    },
+    "emailSubject": {
+        "type":"string",
+        "defaultValue":"Backup Reports - Detailed"
+    }
     },
     "variables": {},
     "resources": [
@@ -114,7 +124,8 @@
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
             "name": "[concat(parameters('name_prefix'), '-FullReport')]",
-            "location": "[parameters('location')]",            
+            "location": "[parameters('location')]",           
+            "tags": "[parameters('resourceTags')]", 
             "properties": {
                 "state": "Enabled",
                 "definition": {
@@ -1187,7 +1198,7 @@
                                         }
                                     ],
                                     "Body": "<p><u><strong>BackupReport</strong></u><br>\n<br>\n<strong>Summary</strong><br>\n<br>\n@{base64ToString(body('Run_query_and_visualize_results')?['body'])}<br>\n<br>\n<strong>BackupInstance</strong><br>\n<br>\n@{variables('BackupInstanceVisual')}<br>\n<br>\n<strong>BillingGroup</strong><br>\n<br>\n@{variables('BillingGroupVisual')}<br>\n<br>\n<strong>Job<br>\n<br>\n</strong><strong>@{variables('JobVisual')}</strong><strong><br>\n<br>\nPolicy</strong><br>\n<br>\n@{variables('PoliciesVisual')}</p>",
-                                    "Subject": "Backup Report",
+                                    "Subject": "[parameters('emailSubject')]",
                                     "To": "[parameters('emailId')]"
                                 },
                                 "host": {

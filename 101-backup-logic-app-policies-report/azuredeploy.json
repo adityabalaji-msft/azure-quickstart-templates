@@ -66,7 +66,17 @@
 		"aggregationType": {
 			"defaultValue": "\"Daily\"",
             "type": "String"
+        },
+        "resourceTags": {
+        "type": "object",
+        "defaultValue": {
+            "UsedByBackupReports": "true"
         }
+    },
+     "emailSubject": {
+        "type":"string",
+        "defaultValue":"Backup Reports - Policies"
+    }
     },
     "variables": {},
     "resources": [
@@ -98,7 +108,8 @@
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
             "name": "[concat(parameters('name_prefix'), '-Policy')]",
-            "location": "[parameters('location')]",            
+            "location": "[parameters('location')]",
+            "tags": "[parameters('resourceTags')]",            
             "properties": {
                 "state": "Enabled",
                 "definition": {
@@ -548,7 +559,7 @@
                                         }
                                     ],
                                     "Body": "<p><u><strong><br>\nBackupInstances Report<br>\n<br>\n</strong></u><u><strong>@{variables('visual')}</strong></u><u><strong><br>\n<br>\n<br>\n</strong></u><br>\n<br>\n</p>",
-                                    "Subject": "Policies Report",
+                                    "Subject": "[parameters('emailSubject')]",
 									"To": "[parameters('emailId')]"                                
                                 },
                                 "host": {
