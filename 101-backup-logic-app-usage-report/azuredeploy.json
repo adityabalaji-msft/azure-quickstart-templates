@@ -107,7 +107,7 @@
 		{
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[concat(parameters('name_prefix'), '-BillingGroup')]",
+            "name": "[parameters('name_prefix')]",
             "location": "[parameters('location')]", 
             "tags": "[parameters('resourceTags')]",           
             "properties": {
