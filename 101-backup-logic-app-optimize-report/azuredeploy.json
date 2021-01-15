@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+         "workspaceResourceGroupId": {
+            "type":"string"
+        },
         "name_prefix": {
             "defaultValue": "BackupReport-LogicApp",
             "type": "String"
@@ -161,7 +164,7 @@
                         "Recurrence": {
                             "recurrence": {
 								"frequency": "[parameters('frequency')]",
-                                "interval": 10
+                                "interval": 1
                             },
                             "type": "Recurrence"
                         }
@@ -446,10 +449,11 @@
                                 "method": "post",
                                 "path": "/visualizeQuery",
                                 "queries": {
-									"resourcegroups": "[resourceGroup().name]",
-									"resourcename": "[parameters('workspace')]",
+									 "resourcegroups": "[split(parameters('workspaceResourceGroupId'),'/')[4]]",
+                                    "resourcename": "[parameters('workspace')]",
                                     "resourcetype": "Log Analytics Workspace",
-									"subscriptions": "[subscription().subscriptionId]",
+                                    "subscriptions": "[split(parameters('workspaceResourceGroupId'),'/')[2]]",
+                                   
 									"timerange": "Set in query",
                                     "visType": "Html Table"
                                 }
