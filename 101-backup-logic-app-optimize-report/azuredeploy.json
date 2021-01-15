@@ -6,6 +6,9 @@
             "defaultValue": "BackupReport-LogicApp",
             "type": "String"
         },
+        "workspaceResourceGroupId": {
+            "type":"string"
+        },
         "connections_azuremonitorlogs_externalid": {
 			"defaultValue": "[concat(resourceGroup().id,'/providers/Microsoft.Web/connections/azuremonitorlogs')]",
             "type": "String"
