@@ -102,6 +102,9 @@
 		},
 		"resourceTags": {
 			"type": "object",
+            "defaultValue":{
+                "UsedByBackupReports":"true"
+            }
 			"metadata": {
 				"description": "Tags to be assigned to the Logic App and the API connection resources."
 			}
